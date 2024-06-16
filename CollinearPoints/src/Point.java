@@ -10,6 +10,7 @@
 
  import java.util.Comparator;
  import edu.princeton.cs.algs4.StdDraw;
+import edu.princeton.cs.algs4.StdOut;
  
  public class Point implements Comparable<Point> {
  
@@ -60,11 +61,12 @@
       */
      public double slopeTo(Point that) {
          /* YOUR CODE HERE */
-         if ( this.x == that.x & this.y == that.y ) return Double.NEGATIVE_INFINITY;
+         if ( this.x == that.x && this.y == that.y ) return Double.NEGATIVE_INFINITY;
          if ( this.x == that.x ) return Double.POSITIVE_INFINITY;
          if ( this.y == that.y ) return 0.0;
-         
-         return ( this.y - that.y ) / ( this.x - that.x );
+         double dy = ( this.y - that.y );
+         double dx = ( this.x - that.x );
+         return dy / dx;
      }
  
      /**
@@ -81,9 +83,10 @@
       */
      public int compareTo(Point that) {
          /* YOUR CODE HERE */
-         if ( this.x == that.x & this.y == that.y ) return 0;
-         if ( this.y != that.y) return this.y - that.y; // y0 < y1 -> negative int
-         return this.x - that.x; // y0 = y1 and x0 < x1 -> negative int
+         if ( this.y < that.y ) return -1; // y0 < y1 -> negative int
+         if ( this.y == that.y && this.x < that.x ) return -1; // if y0 = y1 and x0 < x1 -> negative int
+         if ( this.y == that.y && this.x == that.x ) return 0;
+         return 1; // this point is equal to the argument point (x0 = x1 and y0 = y1)
      }
  
      /**
@@ -94,8 +97,17 @@
       */
      public Comparator<Point> slopeOrder() {
          /* YOUR CODE HERE */
+         return new SlopeOrder();
      }
  
+     private class SlopeOrder implements Comparator<Point> {
+        public int compare(Point q1, Point q2) {
+            if ( slopeTo(q1) < slopeTo(q2) ) return -1;
+            if ( slopeTo(q1) > slopeTo(q2) ) return 1;
+            return 0;
+        }
+     }
+
      /**
       * Returns a string representation of this point.
       * This method is provide for debugging;
@@ -113,5 +125,10 @@
       */
      public static void main(String[] args) {
          /* YOUR CODE HERE */
+         Point p1 = new Point(1, 2);
+         StdOut.println(p1.x+"==1");
+         StdOut.println(p1.y+"==2");
+         Point p2 = new Point(3, 3);
+         StdOut.println(p1.slopeTo(p2)+"= -0.5");
      }
  }
